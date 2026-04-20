@@ -66,12 +66,23 @@
             height: 100vh;
             background-image: 
                 linear-gradient(to bottom, var(--bg-overlay), #020617),
-                url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop');
+                url('bg.jpg'); /* The local image */
             background-size: cover;
             background-position: center;
             z-index: -1;
             filter: brightness(0.8);
-            transition: transform 10s ease-out;
+            animation: moveIn 75s ease-in-out infinite alternate;
+        }
+
+        @keyframes moveIn {
+            0% {
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+            100% {
+                background-position: 100% 50%;
+                transform: scale(1.15);
+            }
         }
 
         /* Container for slides */
@@ -574,9 +585,6 @@
             function updateState() {
                 // Update Progress bar
                 updateProgress();
-                
-                // Subtle background parallax effect
-                bgLayer.style.transform = `scale(1.15) translate(${currentSlide * -0.4}%, ${currentSlide * -0.2}%)`;
 
                 setTimeout(() => {
                     isAnimating = false;
