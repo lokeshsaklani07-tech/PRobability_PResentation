@@ -57,19 +57,27 @@
             justify-content: center;
         }
 
-        /* Fixed Mountain Background */
-        .background-layer {
+        /* Background Layers System */
+        .background-layers {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
+            z-index: -2;
+        }
+
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
-            z-index: -1;
-            filter: brightness(0.6);
             transition: opacity 1.5s ease-in-out;
-            animation: moveIn 80s ease-in-out infinite alternate;
+            animation: moveIn 30s linear infinite alternate;
+            filter: brightness(0.7);
         }
 
         .background-layer::before {
@@ -83,10 +91,40 @@
             z-index: 1;
         }
 
+        /* Morphing Background Blobs */
+        .morph-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .blob {
+            position: absolute;
+            background: linear-gradient(45deg, var(--accent-gold), #64ffda);
+            filter: blur(100px);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: morphBlob 20s infinite alternate;
+        }
+
+        .blob-1 { width: 50vw; height: 50vw; top: -10%; left: -10%; }
+        .blob-2 { width: 40vw; height: 40vw; bottom: -10%; right: -10%; animation-delay: -5s; }
+
+        @keyframes morphBlob {
+            0% { border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%; transform: translate(0, 0) scale(1); }
+            50% { border-radius: 60% 40% 40% 60% / 60% 60% 40% 40%; transform: translate(5%, 5%) scale(1.1); }
+            100% { border-radius: 50% 50% 50% 50% / 30% 70% 30% 70%; transform: translate(-5%, -5%) scale(0.9); }
+        }
+
         @keyframes moveIn {
-            0% { transform: scale(1.1) translate(0%, 0%); }
-            50% { transform: scale(1.2) translate(-2%, -1%); }
-            100% { transform: scale(1.1) translate(1%, 0.5%); }
+            0% { transform: scale(1.05) translate(0,0); }
+            100% { transform: scale(1.15) translate(-1%, -1%); }
         }
 
         /* Container for slides */
@@ -301,8 +339,16 @@
 </head>
 <body>
 
-    <div class="background-layer active-layer" id="bg-layer-1"></div>
-    <div class="background-layer" id="bg-layer-2" style="opacity: 0;"></div>
+    <div class="background-layers">
+        <div class="background-layer active" style="background-image: url('bg1.jpg');"></div>
+        <div class="background-layer" style="opacity: 0;"></div>
+    </div>
+
+    <!-- Morphing Effects -->
+    <div class="morph-wrapper">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
 
     <div class="progress-container">
         <div class="progress-bar" id="progress-bar"></div>
@@ -529,13 +575,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const slides = document.querySelectorAll('.slide');
-            const bgLayers = [document.getElementById('bg-layer-1'), document.getElementById('bg-layer-2')];
+            const bgLayers = document.querySelectorAll('.background-layer');
             const progressBar = document.getElementById('progress-bar');
-            
-            // Image list - 1 image for every 2 slides
-            const bgImages = [
-                'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.jpg', 'bg6.jpg', 'bg7.jpg'
-            ];
+            const bgImages = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.jpg', 'bg6.jpg', 'bg7.jpg'];
             
             let currentSlide = 0;
             let currentBgIndex = 0;
@@ -599,7 +641,7 @@
 
                 setTimeout(() => {
                     isAnimating = false;
-                }, 800);
+                }, 400); // Faster response time for navigation
             }
 
             function updateBackground() {
