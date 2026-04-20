@@ -64,25 +64,29 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-image: 
-                linear-gradient(to bottom, var(--bg-overlay), #020617),
-                url('bg.jpg'); /* The local image */
             background-size: cover;
             background-position: center;
             z-index: -1;
-            filter: brightness(0.8);
-            animation: moveIn 75s ease-in-out infinite alternate;
+            filter: brightness(0.6);
+            transition: opacity 1.5s ease-in-out;
+            animation: moveIn 80s ease-in-out infinite alternate;
+        }
+
+        .background-layer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--bg-overlay), #020617);
+            z-index: 1;
         }
 
         @keyframes moveIn {
-            0% {
-                background-position: 0% 50%;
-                transform: scale(1);
-            }
-            100% {
-                background-position: 100% 50%;
-                transform: scale(1.15);
-            }
+            0% { transform: scale(1.1) translate(0%, 0%); }
+            50% { transform: scale(1.2) translate(-2%, -1%); }
+            100% { transform: scale(1.1) translate(1%, 0.5%); }
         }
 
         /* Container for slides */
@@ -297,7 +301,8 @@
 </head>
 <body>
 
-    <div class="background-layer" id="bg-layer"></div>
+    <div class="background-layer active-layer" id="bg-layer-1"></div>
+    <div class="background-layer" id="bg-layer-2" style="opacity: 0;"></div>
 
     <div class="progress-container">
         <div class="progress-bar" id="progress-bar"></div>
@@ -524,10 +529,22 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const slides = document.querySelectorAll('.slide');
-            const bgLayer = document.getElementById('bg-layer');
+            const bgLayers = [document.getElementById('bg-layer-1'), document.getElementById('bg-layer-2')];
             const progressBar = document.getElementById('progress-bar');
+            
+            // Image list - 1 image for every 2 slides
+            const bgImages = [
+                'bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg', 'bg5.jpg', 'bg6.jpg'
+            ];
+            
             let currentSlide = 0;
+            let currentBgIndex = 0;
+            let activeLayerIndex = 0;
             let isAnimating = false;
+
+            // Initial Bg
+            bgLayers[0].style.backgroundImage = `url(${bgImages[0]})`;
+            bgLayers[1].style.backgroundImage = `url(${bgImages[0]})`;
 
             // Initialize Progress
             updateProgress();
@@ -543,7 +560,7 @@
                 }
             });
 
-            // Touch/Click Navigation (Left/Right side of screen)
+            // Touch/Click Navigation
             document.addEventListener('click', (e) => {
                 if (e.clientX > window.innerWidth / 2) {
                     goToNextSlide();
@@ -557,12 +574,9 @@
                     isAnimating = true;
                     slides[currentSlide].classList.remove('active');
                     slides[currentSlide].classList.add('prev');
-                    
                     currentSlide++;
-                    
                     slides[currentSlide].classList.remove('next');
                     slides[currentSlide].classList.add('active');
-                    
                     updateState();
                 }
             }
@@ -572,23 +586,40 @@
                     isAnimating = true;
                     slides[currentSlide].classList.remove('active');
                     slides[currentSlide].classList.add('next');
-                    
                     currentSlide--;
-                    
                     slides[currentSlide].classList.remove('prev');
                     slides[currentSlide].classList.add('active');
-                    
                     updateState();
                 }
             }
 
             function updateState() {
-                // Update Progress bar
                 updateProgress();
+                updateBackground();
 
                 setTimeout(() => {
                     isAnimating = false;
-                }, 800); // Matches CSS transition duration
+                }, 800);
+            }
+
+            function updateBackground() {
+                // Change image every 2 slides
+                const newBgIndex = Math.floor(currentSlide / 2);
+                
+                if (newBgIndex !== currentBgIndex) {
+                    currentBgIndex = newBgIndex;
+                    const nextLayerIndex = 1 - activeLayerIndex;
+                    
+                    // Set next image on hidden layer
+                    const imagePath = bgImages[currentBgIndex % bgImages.length];
+                    bgLayers[nextLayerIndex].style.backgroundImage = `url(${imagePath})`;
+                    
+                    // Fade in next layer, fade out active layer
+                    bgLayers[nextLayerIndex].style.opacity = 1;
+                    bgLayers[activeLayerIndex].style.opacity = 0;
+                    
+                    activeLayerIndex = nextLayerIndex;
+                }
             }
 
             function updateProgress() {
