@@ -392,6 +392,6 @@ export default function App() {
         </SlideWrapper>
 
       </div>
-    </>
+    </div>
   );
 }
