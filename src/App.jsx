@@ -201,36 +201,27 @@ export default function App() {
 
         {/* Slide 4: Confusing Concepts (Mutually Exclusive vs Independent) */}
         <SlideWrapper id={4} activeSlide={activeSlide}>
-          <div className="grid-2 align-center">
-            <div style={{position: 'relative'}}>
-              <h3>Core Logic</h3>
-              <h2>Differentiating Confusing Concepts</h2>
-              
-              <div style={{marginBottom: '3rem'}}>
-                 <h3 style={{color: 'white'}}>Mutually Exclusive Events</h3>
-                 <p>Events that physically block each other. It is an absolute impossibility for them to co-exist.<br/>
-                 <strong style={{color: 'var(--gold-primary)'}}>Analogy:</strong> Like trying to be "Asleep" and "Awake" at the exact same millisecond. Oil and water.</p>
-                 <HandNote 
-                    text="Zero overlap" 
-                    top="60%" right="-50px" 
-                    arrowSrc="M 50 10 Q 20 40 0 60" 
-                    arrowW="60" arrowH="80" 
-                    arrowStyle={{top: '10px', left: '-50px'}}
-                 />
-              </div>
-
-              <div>
-                 <h3 style={{color: 'white'}}>Independent Events</h3>
-                 <p>Events that have absolutely zero influence on one another. Knowing one happened provides no mathematical edge in predicting the other.<br/>
-                 <strong style={{color: 'var(--gold-primary)'}}>Analogy:</strong> If a trader in Tokyo buys stock, and you flip a coin in London. Total strangers.</p>
-              </div>
-            </div>
+          <div style={{position: 'relative'}}>
+            <h3>Core Logic</h3>
+            <h2>Differentiating Confusing Concepts</h2>
             
-            <div className="meme-container">
-               <img src="https://i.imgflip.com/1ur9b0.jpg" alt="Distracted Boyfriend" className="meme-bg" style={{objectPosition: '50% 20%'}}/>
-               <div className="meme-text" style={{top: '50%', left: '10%'}}>Data Scientists</div>
-               <div className="meme-text" style={{top: '50%', right: '10%'}}>SaaS AI Metrics</div>
-               <div className="meme-text" style={{top: '75%', left: '35%'}}>Bayesian Predictions</div>
+            <div style={{marginBottom: '3rem'}}>
+               <h3 style={{color: 'white'}}>Mutually Exclusive Events</h3>
+               <p style={{maxWidth: '800px'}}>Events that physically block each other. It is an absolute impossibility for them to co-exist.<br/>
+               <strong style={{color: 'var(--gold-primary)'}}>Analogy:</strong> Like trying to be "Asleep" and "Awake" at the exact same millisecond. Oil and water.</p>
+               <HandNote 
+                  text="Zero overlap" 
+                  top="60%" right="-50px" 
+                  arrowSrc="M 50 10 Q 20 40 0 60" 
+                  arrowW="60" arrowH="80" 
+                  arrowStyle={{top: '10px', left: '-50px'}}
+               />
+            </div>
+
+            <div style={{maxWidth: '800px'}}>
+               <h3 style={{color: 'white'}}>Independent Events</h3>
+               <p>Events that have absolutely zero influence on one another. Knowing one happened provides no mathematical edge in predicting the other.<br/>
+               <strong style={{color: 'var(--gold-primary)'}}>Analogy:</strong> If a trader in Tokyo buys stock, and you flip a coin in London. Total strangers.</p>
             </div>
           </div>
         </SlideWrapper>
